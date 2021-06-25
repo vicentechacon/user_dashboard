@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <title>Admin Dashboard</title>
+</head>
+
+<body class="d-flex flex-column h-100 w-100 bg_gradient_green">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/dashboard">Dashboards</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                {% if user_online.admin == True %}
+                <a class="nav-link" href="/dashboard/admin">Panel</a>
+                {% endif %}
+                <a class="nav-link" href="/users/edit/{{user_online.id}}">Perfil</a>
+                <a class="nav-link" href="/users/{{user_online.id}}">My Wall</a>
+                <a class="nav-link" href="/logout/">Logout</a>
+                <h6 class='nav-link'>Welcome, {{user_online.first_name}}!</h6>
+            </div>
+        </div>
+        </div>
+    </nav>
+    <div class="container m-5">
+        <div class="row justify-content-between">
+
+            <div class="col-6">
+                <h4 class='display'>Manage User</h4>
+            </div>
+            <div><a class='btn btn-secondary class="col-6' href="/users/new">Add New!</a></div>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Created_at</th>
+                    <th scope="col">User Level</th>
+                    <th scope="col">Actions</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    {% for user in users %}
+                    <th scope="row">{{user.id}}</th>
+                    <td><a href="/users/{{user.id}}">{{user.first_name}} {{user.last_name}}</a></td>
+                    <td>{{user.email}}</td>
+                    <td>{{user.created_at}}</td>
+                    <td>{% if user.admin == True %}Admin{% endif %} {% if user.admin == False %}Normal{% endif %}</td>
+                    <td><a href="/admin/users/edit/{{user.id}}">Edit</a> | <a
+                            href="/users/{{user.id}}/delete">Remove</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <title>User Information</title>
+</head>
+
+<body class="d-flex flex-column h-100 w-100 bg_gradient_green">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/dashboard">Dashboards</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                {% if user_online.admin == True %}
+                <a class="nav-link" href="/dashboard/admin">Panel</a>
+                {% endif %}
+                <a class="nav-link" href="/users/edit/{{user_online.id}}">Perfil</a>
+                <a class="nav-link" href="/users/{{user_online.id}}">My Wall</a>
+                <a class="nav-link" href="/logout/">Logout</a>
+                <h6 class='nav-link'>Welcome, {{user_online.first_name}}!</h6>
+            </div>
+        </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class='mt-4 text-center'>
+            <h5 class='display-5'>Welcome to {{user.first_name}} Wall!</h5>
+            <ol>Registered at: {{user.created_at}}</ol>
+            <ol>User Id: #{{user.id}}</ol>
+            <ol>Email Adress: {{user.email}}</ol>
+            <ol>Description: {{user.description}}</ol>
+            <ol>Admin: {{user.admin}}</ol>
+        </div>
+        <h5 class='display-5'>Leave a message for {{user.first_name}}!</h5>
+        <form action="{{user.id}}/post_message" method='POST'>
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="">Post a Message:</label>
+                <textarea name="message" class="form-control" cols="2" rows="2"></textarea>
+                <button type='submit' class='btn btn-success mt-1'>Post A message</button>
+            </div>
+        </form>
+
+        {% for message in messages %}
+        <div class="card my-5">
+            <div class="card-header">
+                <div class='row justify-content-between'>
+                    <div>
+                        <h5>{{message.created_by.first_name}} wrote:</h5>
+                    </div>
+                    <u><i>
+                            <h6>On {{message.created_at}}</h6>
+                        </i></u>
+                </div>
+            </div>
+            <div class="card-body">
+                <div>
+                    <p>{{message.message}}
+                </div> <i> {% if request.session.id == message.created_by.id %} <a
+                        href="/delete/{{message.id}}">Delete</a>
+                    {% endif %}</p></i>
+
+                {% for comment in message.comments.all %}
+                <i>
+                    <u>{{comment.created_by.first_name}} {{comment.created_by.last_name}} wrote:
+                        </p></u>
+                </i>
+                <p>{{comment.comment}} - <b>{{comment.created_at}}</b>
+                    {% if request.session.id == comment.created_by.id %}
+                    <a href="/delete/comment/{{comment.id}}">Delete</a>
+                    {% endif %}<br>
+
+                    {% endfor %}
+
+            </div>
+
+            <form action="/users/{{message.id}}/post_comment" method='POST'>
+                {% csrf_token %}
+                <div class="form-group p-5">
+                    <label for="">Post a Comment:</label>
+                    <textarea name="comment" class="form-control" cols="1" rows="2"></textarea>
+                    <button type='submit' class='btn btn-secondary'>Post A comment</button>
+                </div>
+
+            </form>
+        </div>
+        {% endfor %}
+
+
+
+
+    </div>
+
+</body>
+
+</html>

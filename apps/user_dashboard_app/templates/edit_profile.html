@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <title>Admin Dashboard</title>
+</head>
+
+<body class="d-flex flex-column h-100 w-100 bg_gradient_green">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/dashboard">Dashboards</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                {% if user.admin == True %}
+                <a class="nav-link" href="/dashboard/admin">Panel</a>
+                {% endif %}
+                <a class="nav-link" href="/users/edit/{{user.id}}">Perfil</a>
+                <a class="nav-link" href="/users/{{user.id}}">My Wall</a>
+                <a class="nav-link" href="/logout/">Logout</a>
+                <h6 class='nav-link'>Welcome, {{user.first_name}}!</h6>
+            </div>
+        </div>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <div class="row justify-content-between">
+            <div class="col-6">
+                <h5>Edit user #{{user.first_name}}</h5>
+            </div>
+            <div class="col-6">
+
+                <a class='btn btn-primary' href="#">Return to Dashboard</a>
+            </div>
+        </div>
+
+        <div class="row justify-content-around">
+            <div class="col-6">
+                <h6>Edit Information</h6>
+                <form action='' method='POST'>
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for='email'>Email address</label>
+                        <input type="email" name='email' class="form-control" value='{{user.email}}'>
+                    </div>
+                    <div class="form-group">
+                        <label for='first_name'>First Name</label>
+                        <input type="text" name='first_name' class="form-control" value='{{user.first_name}}'>
+                    </div>
+                    <div class="form-group">
+                        <label for='last_name'>Last Name</label>
+                        <input type="text" name='last_name' class="form-control" value='{{user.last_name}}'>
+                    </div>
+                    <button class='btn btn-primary'>Save</button>
+            </div>
+            </form>
+
+            <div class="col-6">
+                {% for message in messages %}
+                <p>{{message}}</p>
+                {% endfor %}
+                <h6>Change Password</h6>
+                <form action="/change_password/{{user.id}}" method='POST'>
+                    {% csrf_token %}
+                    <form>
+                        <div class="form-group">
+                            <label for='password'>Password</label>
+                            <input type="password" name='password' class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for='confirm_password'>Confirm Password</label>
+                            <input type="password" name='confirm_password' class="form-control">
+                        </div>
+                        <button class='btn btn-primary'>Update Password</button>
+
+                    </form>
+            </div>
+
+        </div>
+        <div class="row mt-3">
+            <div class="col-12">
+                <h6>Edit Description</h6>
+                <form action="/users/edit/description/{{user.id}}" method='POST'>
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="description"></label>
+                        <textarea name="description" cols="60" rows="3">{{user.description}}</textarea>
+                    </div>
+                    <button class='btn btn-primary'>Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>

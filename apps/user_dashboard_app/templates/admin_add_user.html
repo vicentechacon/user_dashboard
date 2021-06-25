@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <title>Books Home</title>
+</head>
+
+<body class="d-flex flex-column h-100 w-100 bg_gradient_green">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/dashboard">Dashboards</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                {% if user_online.admin == True %}
+                <a class="nav-link" href="/dashboard/admin">Panel</a>
+                {% endif %}
+                <a class="nav-link" href="/users/edit/{{user_online.id}}">Perfil</a>
+                <a class="nav-link" href="#">My Wall</a>
+                <a class="nav-link" href="/logout/">Logout</a>
+                <h6 class='nav-link'>Welcome, {{user_online.first_name}}!</h6>
+            </div>
+        </div>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <div class="row justify-content-between">
+            <h3>Add a new user</h3>
+            <a class='btn btn-primary' href="/dashboard/admin">Return to Daashboard</a>
+
+        </div>
+        {% for message in messages %}
+        <p>{{message}}</p>
+        {% endfor %}
+        <form method='POST' action=''>
+            {% csrf_token %}
+
+            <label for="first_name">First name</label>
+            <input name='first_name' type="text" class="form-control w-25" required autofocus>
+
+            <label for="last_name">Last name</label>
+            <input name='last_name' type="text" class="form-control w-25" required autofocus>
+
+            <label for="email">Email adress</label>
+            <input name='email' type="email" class="form-control w-25" required autofocus>
+
+            <label for="inputPassword">Password</label>
+            <input name='password' type="password" id="inputPassword" class="form-control w-25" required>
+
+            <label for="inputPassword">Confirm Password</label>
+            <input name='confirm_password' type="password" class="form-control w-25" required>
+
+            <button class="btn btn-primary mt-2" type="submit">Create</button>
+        </form>
+    </div>
+</body>
